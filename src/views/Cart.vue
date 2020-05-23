@@ -68,9 +68,7 @@
         </div>
       </div>
       <bottom-modal ref="razorSetOptionModal">
-        <div class="test" style="width: 100%; height: 250px; background-color: #0F5783;">
-          <h1>Test</h1>
-        </div>
+        <razor-select />
       </bottom-modal>
     </main>
   </div>
@@ -81,6 +79,7 @@ import GlobalHeader from "@/components/header/index.vue";
 import Logo from "@/components/header/Logo.vue";
 import Item from "@/components/product/Item.vue";
 import ItemBox from "@/components/product/ItemBox.vue";
+import RazorSelect from "@/components/product/RazorSelect.vue";
 import NumberInput from "@/components/common/NumberInput.vue";
 import BottomModal from "@/components/common/BottomModal.vue";
 
@@ -92,7 +91,8 @@ export default {
     Item,
     ItemBox,
     NumberInput,
-    BottomModal
+    BottomModal,
+    RazorSelect
   },
   data() {
     return {
