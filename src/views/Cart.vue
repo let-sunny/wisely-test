@@ -62,11 +62,16 @@
           v-for="item in items"
           :key="item.id"
         >
-          <item-box>
+          <item-box @click="selectItem">
             <item :item="item"></item>
           </item-box>
         </div>
       </div>
+      <bottom-modal ref="razorSetOptionModal">
+        <div class="test" style="width: 100%; height: 250px; background-color: #0F5783;">
+          <h1>Test</h1>
+        </div>
+      </bottom-modal>
     </main>
   </div>
 </template>
@@ -77,6 +82,7 @@ import Logo from "@/components/header/Logo.vue";
 import Item from "@/components/product/Item.vue";
 import ItemBox from "@/components/product/ItemBox.vue";
 import NumberInput from "@/components/common/NumberInput.vue";
+import BottomModal from "@/components/common/BottomModal.vue";
 
 export default {
   name: "Cart",
@@ -85,7 +91,8 @@ export default {
     Logo,
     Item,
     ItemBox,
-    NumberInput
+    NumberInput,
+    BottomModal
   },
   data() {
     return {
@@ -152,6 +159,11 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    selectItem() {
+      this.$refs.razorSetOptionModal.show();
+    },
   }
 };
 </script>
