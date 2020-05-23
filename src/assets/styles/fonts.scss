@@ -1,0 +1,54 @@
+$font_path_ko: "~@/assets/fonts/spoqa-han-sans/";
+@font-face {
+  font-family: "Spoqa Han Sans";
+  font-weight: 700;
+  src: local("Spoqa Han Sans Bold"),
+    url("#{$font_path_ko}SpoqaHanSansBold.woff2") format("woff2"),
+    url("#{$font_path_ko}SpoqaHanSansBold.woff") format("woff"),
+    url("#{$font_path_ko}SpoqaHanSansBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Spoqa Han Sans";
+  font-weight: 400;
+  src: local("Spoqa Han Sans Regular"),
+    url("#{$font_path_ko}SpoqaHanSansRegular.woff2") format("woff2"),
+    url("#{$font_path_ko}SpoqaHanSansRegular.woff") format("woff"),
+    url("#{$font_path_ko}SpoqaHanSansRegular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Spoqa Han Sans";
+  font-weight: 300;
+  src: local("Spoqa Han Sans Light"),
+    url("#{$font_path_ko}SpoqaHanSansLight.woff2") format("woff2"),
+    url("#{$font_path_ko}SpoqaHanSansLight.woff") format("woff"),
+    url("#{$font_path_ko}SpoqaHanSansLight.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Spoqa Han Sans";
+  font-weight: 100;
+  src: local("Spoqa Han Sans Thin"),
+    url("#{$font_path_ko}SpoqaHanSansThin.woff2") format("woff2"),
+    url("#{$font_path_ko}SpoqaHanSansThin.woff") format("woff"),
+    url("#{$font_path_ko}SpoqaHanSansThin.ttf") format("truetype");
+}
+
+@mixin font(
+  $size: 16px,
+  $weight: 400,
+  $line_height: 1,
+  $letter_spacing: -0.06em
+) {
+  $family: "Spoqa Han Sans";
+  font: {
+    family: $family;
+    size: $size;
+    weight: $weight;
+  }
+  letter-spacing: $letter_spacing;
+  line-height: $line_height;
+}
+
+

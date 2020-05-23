@@ -1,0 +1,39 @@
+body {
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a {
+  margin: 0;
+  padding: 0;
+  color: $text_main;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
+button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+ul,
+ol,
+dl,
+dd {
+  margin: 0;
+  padding: 0;
+}
+li {
+  list-style-type: none;
+}
