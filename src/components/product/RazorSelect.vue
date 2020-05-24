@@ -7,7 +7,7 @@
         :class="{
           'razor-select__option-info--selected': selectedOption === item.id
         }"
-        v-for="item in items"
+        v-for="item in razor.options"
         :key="item.id"
       >
         <img
@@ -24,7 +24,7 @@
       <div
         class="razor-select__radio-input"
         :class="`razor-select__radio-input--${item.color}`"
-        v-for="item in items"
+        v-for="item in razor.options"
         :key="item.color"
       >
         <input
@@ -40,7 +40,10 @@
       </div>
     </div>
     <div class="razor-select__selection">
-      <button class="razor-select__selection-button">
+      <button
+        class="razor-select__selection-button"
+        @click="$emit('select', razor)"
+      >
         {{ messages.select }}
       </button>
     </div>
@@ -49,35 +52,32 @@
 
 <script>
 export default {
-  name: "RazorOption",
+  name: "RazorSelect",
+  props: {
+    razor: {
+      type: Object,
+      default: () => {
+        return {
+          options: []
+        };
+      }
+    }
+  },
   data() {
     return {
-      selectedOption: 1,
+      selectedOption: null,
       messages: {
         title: "면도기 색상을 선택해주세요",
         select: "선택하기"
-      },
-      items: [
-        {
-          id: 1,
-          name: "미드나잇 네이비",
-          color: "navy",
-          thumbnail: require("@/assets/images/razor_navy.png")
-        },
-        {
-          id: 2,
-          name: "사파이어 블루",
-          color: "blue",
-          thumbnail: require("@/assets/images/razor_blue.png")
-        },
-        {
-          id: 3,
-          name: "슬레이트 그레이",
-          color: "grey",
-          thumbnail: require("@/assets/images/razor_grey.png")
-        }
-      ]
+      }
     };
+  },
+  watch: {
+    razor(newVal) {
+      if (newVal) {
+        this.selectedOption = newVal.options[0]?.id;
+      }
+    }
   }
 };
 </script>
@@ -129,6 +129,7 @@ export default {
   background-color: $white;
   width: 100%;
   height: 476px;
+  box-sizing: border-box;
   padding: 24px 0 20px;
   display: flex;
   flex-direction: column;

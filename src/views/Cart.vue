@@ -6,19 +6,28 @@
       </template>
     </global-header>
     <main class="cart">
-      <div v-if="!count" class="cart__guide--empty">
-        <p class="cart__guide--empty__message" v-html="messages.empty"></p>
+      <div
+        v-show="!selectedItems.length"
+        class="cart__guide-empty"
+        ref="guideEmpty"
+      >
+        <p class="cart__guide-empty__message" v-html="messages.empty"></p>
       </div>
-      <div v-else class="cart__guide--filled">
-        <div class="cart__selected-product-list">
-          <item :item="items[0]">
-            <div class="cart__selected-product-list__control">
-              <div class="cart__selected-product-list__control-button">
-                <button class="remove-button">
+      <div v-show="selectedItems.length" class="cart__selected-item-list">
+        <div
+          class="cart__selected-item"
+          v-for="item in selectedItems"
+          :key="item.id"
+          :ref="`selectedItem-${item.id}`"
+        >
+          <item :item="item">
+            <div class="cart__selected-item__control">
+              <div class="cart__selected-item__control-button">
+                <button class="remove-button" @click="() => remove(item)">
                   <img alt="remove item" :src="images.remove" width="12" />
                 </button>
               </div>
-              <div class="cart__selected-product-list__control-input">
+              <div class="cart__selected-item__control-input">
                 <number-input />
               </div>
             </div>
@@ -54,21 +63,25 @@
       </div>
 
       <div class="cart__product-list">
-        <h1 class="cart__product-list__title">
+        <h1
+          class="cart__product-list__title"
+          v-if="selectedItems.length && selectedItems.length !== items.length"
+        >
           {{ messages.productListTile }}
         </h1>
         <div
           class="cart__product-list__item"
           v-for="item in items"
           :key="item.id"
+          ref="productListItem"
         >
-          <item-box @click="selectItem">
-            <item :item="item"></item>
+          <item-box @click="() => item.onSelect(item)" :ref="`item-${item.id}`">
+            <item :item="item" :show-label="true"></item>
           </item-box>
         </div>
       </div>
       <bottom-modal ref="razorSetOptionModal">
-        <razor-select />
+        <razor-select @select="select" :razor="razor" />
       </bottom-modal>
     </main>
   </div>
@@ -97,6 +110,9 @@ export default {
   data() {
     return {
       count: 4,
+      selectedItems: [],
+      razor: {},
+      animationDuration: 800,
       images: {
         remove: require("@/assets/images/item_remove_btn.png")
       },
@@ -116,19 +132,33 @@ export default {
           name: "면도기 세트",
           options: [
             {
-              name: "미드나잇 네이비"
+              id: 1,
+              name: "미드나잇 네이비",
+              color: "navy",
+              thumbnail: require("@/assets/images/razor_navy.png")
             },
             {
-              name: "사파이어 블루"
+              id: 2,
+              name: "사파이어 블루",
+              color: "blue",
+              thumbnail: require("@/assets/images/razor_blue.png")
             },
             {
-              name: "슬레이트 그레이"
+              id: 3,
+              name: "슬레이트 그레이",
+              color: "grey",
+              thumbnail: require("@/assets/images/razor_grey.png")
             }
           ],
           description: "면도기 핸들+면도날 2개입",
           price: "8900",
           isFreeShipping: true,
-          thumbnail: require("@/assets/images/item_razor_set.png")
+          thumbnail: require("@/assets/images/item_razor_set.png"),
+          onSelect: item => {
+            this.razor = item;
+            this.$refs.razorSetOptionModal.show();
+          },
+          orderNo: 0
         },
         {
           id: 2,
@@ -137,7 +167,9 @@ export default {
           description: "면도날 4개입",
           price: "9600",
           isFreeShipping: false,
-          thumbnail: require("@/assets/images/item_blade.png")
+          thumbnail: require("@/assets/images/item_blade.png"),
+          onSelect: item => this.select(item),
+          orderNo: 1
         },
         {
           id: 3,
@@ -146,7 +178,9 @@ export default {
           description: "스탠다드 150ml",
           price: "4500",
           isFreeShipping: false,
-          thumbnail: require("@/assets/images/item_shaving_gel.png")
+          thumbnail: require("@/assets/images/item_shaving_gel.png"),
+          onSelect: item => this.select(item),
+          orderNo: 2
         },
         {
           id: 4,
@@ -155,15 +189,83 @@ export default {
           description: "스탠다드 60ml",
           price: "3900",
           isFreeShipping: false,
-          thumbnail: require("@/assets/images/item_aftershave.png")
+          thumbnail: require("@/assets/images/item_aftershave.png"),
+          onSelect: item => this.select(item),
+          orderNo: 3
         }
       ]
     };
   },
   methods: {
-    selectItem() {
-      this.$refs.razorSetOptionModal.show();
+    select(item) {
+      this.selectedItems.push(item);
+      if (this.$refs.razorSetOptionModal.isShow) {
+        this.$refs.razorSetOptionModal.close();
+      }
+      this.animatedIn(item);
     },
+    remove(item) {
+      this.animatedOut(item);
+      const index = this.selectedItems.findIndex(
+        selectedItem => selectedItem.id === item.id
+      );
+      this.selectedItems.splice(index, 1);
+    },
+    animatedIn(item) {
+      const [itemRef] = this.$refs[`item-${item.id}`];
+      itemRef.$el.style.minWidth = `${itemRef.$el.clientWidth}px`;
+      itemRef.$el.style.position = "absolute";
+      itemRef.$el.style.opacity = "1";
+      itemRef.$el.parentNode.style.paddingBottom = "0";
+      this.$el.querySelector(".cart").append(itemRef.$el);
+      setTimeout(() => {
+        const [selectedItemRef] = this.$refs[`selectedItem-${item.id}`];
+        const endY = selectedItemRef.offsetTop + selectedItemRef.clientHeight;
+        itemRef.$el.style.transform = `translateY(-${this.$el.clientHeight -
+          endY}px)`;
+        itemRef.$el.style.opacity = "0";
+        itemRef.$el.style.pointerEvents = "none";
+        itemRef.$el.style.transition = `transform ${this.animationDuration}ms, opacity ${this.animationDuration + 100}ms`;
+      });
+
+      setTimeout(() => {
+        const [selectedItemRef] = this.$refs[`selectedItem-${item.id}`];
+        selectedItemRef.style.opacity = "1";
+        itemRef.$el.style.visibility = "hidden";
+      }, this.animationDuration);
+    },
+    animatedOut(item) {
+      const [itemRef] = this.$refs[`item-${item.id}`];
+      itemRef.$el.style.transition = "";
+
+      const productListEl = this.$refs.productListItem;
+      const emptyGuideEl = this.$refs.guideEmpty;
+      const originEl = productListEl[item.orderNo];
+      originEl.appendChild(itemRef.$el);
+      originEl.style.paddingBottom = "12px";
+      originEl.style.height = `${itemRef.$el.clientHeight}px`;
+
+      const [selectedItemRef] = this.$refs[`selectedItem-${item.id}`];
+      const startY =
+        this.selectedItems.length > 1
+          ? originEl.offsetTop -
+            selectedItemRef.offsetTop -
+            itemRef.$el.clientHeight
+          : emptyGuideEl.clientHeight +
+            (item.orderNo + 1) * itemRef.$el.clientHeight;
+      itemRef.$el.style.transform = `translateY(-${startY}px)`;
+      setTimeout(() => {
+        itemRef.$el.style.transform = `translateY(0)`;
+        itemRef.$el.style.visibility = "visible";
+        itemRef.$el.style.opacity = "1";
+        itemRef.$el.style.transition = `transform ${this.animationDuration}ms, opacity ${this.animationDuration - 100}ms`;
+      });
+      setTimeout(() => {
+        originEl.style.height = "auto";
+        itemRef.$el.style.position = "initial";
+        itemRef.$el.style.pointerEvents = "auto";
+      }, this.animationDuration);
+    }
   }
 };
 </script>
@@ -171,16 +273,16 @@ export default {
 <style lang="scss" scoped>
 .cart {
   padding: 0 16px 36px;
-  &__guide {
-    &--empty__message {
+  &__guide-empty {
+    &__message {
       text-align: center;
       color: $text_main;
       @include font(18px, 300, 1.3);
       padding: 58px 0;
     }
-    &--filled {
-      padding: 15px 0;
-    }
+  }
+  &__selected-item-list {
+    padding: 15px 0;
   }
   &__product-list {
     &__title {
@@ -193,8 +295,9 @@ export default {
       padding-bottom: 12px;
     }
   }
-  &__selected-product-list {
+  &__selected-item {
     padding: 0 10px;
+    opacity: 0;
     .product-divider {
       height: 1px;
       background-color: $light_light_grey;

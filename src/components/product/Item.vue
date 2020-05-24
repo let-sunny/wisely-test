@@ -9,7 +9,7 @@
       <p class="item-info__description" v-html="item.description"></p>
       <p class="item-info__option">
         {{ item.price }}원
-        <span v-if="item.isFreeShipping" class="item-info__option-label">
+        <span v-if="showLabel && item.isFreeShipping" class="item-info__option-label">
           무료배송
         </span>
       </p>
@@ -32,7 +32,8 @@ export default {
   props: {
     item: {
       type: Object
-    }
+    },
+    showLabel: Boolean
   },
   data() {
     return {
