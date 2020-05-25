@@ -42,7 +42,7 @@
     <div class="razor-select__selection">
       <button
         class="razor-select__selection-button"
-        @click="$emit('select', razor)"
+        @click="$emit('select', razor, selectedOption)"
       >
         {{ messages.select }}
       </button>

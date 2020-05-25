@@ -3,14 +3,16 @@
     <div class="number-input__control">
       <button
         class="number-input__control--minus number-input__control-button"
+        @click="$emit('sub')"
       ></button>
     </div>
     <div class="number-input__value">
-      <p class="number">3</p>
+      <p class="number">{{ value }}</p>
     </div>
     <div class="number-input__control">
       <button
         class="number-input__control--plus number-input__control-button"
+        @click="$emit('add')"
       ></button>
     </div>
   </div>

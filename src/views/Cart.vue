@@ -1,16 +1,12 @@
 <template>
   <main class="cart">
-    <div
-      v-show="!selectedItems.length"
-      class="cart__guide-empty"
-      ref="guideEmpty"
-    >
+    <div v-show="!count" class="cart__guide-empty" ref="guideEmpty">
       <p class="cart__guide-empty__message" v-html="messages.empty"></p>
     </div>
-    <div v-show="selectedItems.length" class="cart__selected-item-list">
+    <div v-show="count" class="cart__selected-item-list">
       <div
         class="cart__selected-item"
-        v-for="item in selectedItems"
+        v-for="item in selectedList"
         :key="item.id"
         :ref="`selectedItem-${item.id}`"
       >
@@ -22,7 +18,11 @@
               </button>
             </div>
             <div class="cart__selected-item__control-input">
-              <number-input />
+              <number-input
+                :value="item.count"
+                @add="() => addCount(item)"
+                @sub="() => subCount(item)"
+              />
             </div>
           </div>
         </item>
@@ -39,7 +39,9 @@
         <dt class="cart__price-title cart__price-total">
           {{ messages.totalPrice }}
         </dt>
-        <dd class="cart__price-content cart__price-total">8900원</dd>
+        <dd class="cart__price-content cart__price-total">
+          {{ $options.filters.currency(totalPrice) }}
+        </dd>
       </dl>
 
       <div class="cart__order">
@@ -59,13 +61,13 @@
     <div class="cart__product-list">
       <h1
         class="cart__product-list__title"
-        v-if="selectedItems.length && selectedItems.length !== items.length"
+        v-if="count && count !== productList.length"
       >
         {{ messages.productListTile }}
       </h1>
       <div
         class="cart__product-list__item"
-        v-for="item in items"
+        v-for="item in productList"
         :key="item.id"
         ref="productListItem"
       >
@@ -96,10 +98,33 @@ export default {
     BottomModal,
     RazorSelect
   },
+  mounted() {
+    this.selectedList.forEach(item => this.animatedIn(item, 0));
+  },
+  computed: {
+    productList() {
+      return this.$store.state.cart.productList.map(product => ({
+        ...product,
+        onSelect: product.hasOptionModal
+          ? item => {
+              this.razor = { ...item };
+              this.$refs.razorSetOptionModal.show();
+            }
+          : item => this.select(item)
+      }));
+    },
+    selectedList() {
+      return this.$store.state.cart.selectedList;
+    },
+    count() {
+      return this.$store.getters["cart/count"];
+    },
+    totalPrice() {
+      return this.$store.getters["cart/totalPrice"];
+    }
+  },
   data() {
     return {
-      count: 4,
-      selectedItems: [],
       razor: {},
       animationDuration: 800,
       images: {
@@ -114,93 +139,45 @@ export default {
         shippingPrice: "배송비",
         totalPrice: "최종 결제 금액",
         free: "무료"
-      },
-      items: [
-        {
-          id: 1,
-          name: "면도기 세트",
-          options: [
-            {
-              id: 1,
-              name: "미드나잇 네이비",
-              color: "navy",
-              thumbnail: require("@/assets/images/razor_navy.png")
-            },
-            {
-              id: 2,
-              name: "사파이어 블루",
-              color: "blue",
-              thumbnail: require("@/assets/images/razor_blue.png")
-            },
-            {
-              id: 3,
-              name: "슬레이트 그레이",
-              color: "grey",
-              thumbnail: require("@/assets/images/razor_grey.png")
-            }
-          ],
-          description: "면도기 핸들+면도날 2개입",
-          price: "8900",
-          isFreeShipping: true,
-          thumbnail: require("@/assets/images/item_razor_set.png"),
-          onSelect: item => {
-            this.razor = item;
-            this.$refs.razorSetOptionModal.show();
-          },
-          orderNo: 0
-        },
-        {
-          id: 2,
-          name: "리필 면도날",
-          options: [],
-          description: "면도날 4개입",
-          price: "9600",
-          isFreeShipping: false,
-          thumbnail: require("@/assets/images/item_blade.png"),
-          onSelect: item => this.select(item),
-          orderNo: 1
-        },
-        {
-          id: 3,
-          name: "쉐이빙 젤",
-          options: [],
-          description: "스탠다드 150ml",
-          price: "4500",
-          isFreeShipping: false,
-          thumbnail: require("@/assets/images/item_shaving_gel.png"),
-          onSelect: item => this.select(item),
-          orderNo: 2
-        },
-        {
-          id: 4,
-          name: "리페어 애프터쉐이브",
-          options: [],
-          description: "스탠다드 60ml",
-          price: "3900",
-          isFreeShipping: false,
-          thumbnail: require("@/assets/images/item_aftershave.png"),
-          onSelect: item => this.select(item),
-          orderNo: 3
-        }
-      ]
+      }
     };
   },
   methods: {
-    select(item) {
-      this.selectedItems.push(item);
-      if (this.$refs.razorSetOptionModal.isShow) {
-        this.$refs.razorSetOptionModal.close();
+    async select(item, selectedOptionId) {
+      try {
+        await this.$store.dispatch("cart/addItem", { ...item, selectedOptionId });
+        if (this.$refs.razorSetOptionModal.isShow) {
+          this.$refs.razorSetOptionModal.close();
+        }
+        this.animatedIn(item);
+      } catch (e) {
+        console.log(e);
       }
-      this.animatedIn(item);
     },
-    remove(item) {
-      this.animatedOut(item);
-      const index = this.selectedItems.findIndex(
-        selectedItem => selectedItem.id === item.id
-      );
-      this.selectedItems.splice(index, 1);
+    async remove(item) {
+      try {
+        this.animatedOut(item);
+        await this.$store.dispatch("cart/removeItem", item);
+      } catch (e) {
+        this.animatedIn(item, 0);
+        console.log(e);
+      }
     },
-    animatedIn(item) {
+    async addCount(item) {
+      try {
+        await this.$store.dispatch("cart/addCount", item);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async subCount(item) {
+      try {
+        await this.$store.dispatch("cart/subCount", item);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    animatedIn(item, duration = this.animationDuration) {
       const [itemRef] = this.$refs[`item-${item.id}`];
       itemRef.$el.style.minWidth = `${itemRef.$el.clientWidth}px`;
       itemRef.$el.style.position = "absolute";
@@ -214,16 +191,15 @@ export default {
           endY}px)`;
         itemRef.$el.style.opacity = "0";
         itemRef.$el.style.pointerEvents = "none";
-        itemRef.$el.style.transition = `transform ${
-          this.animationDuration
-        }ms, opacity ${this.animationDuration + 100}ms`;
+        itemRef.$el.style.transition = `transform ${duration}ms, opacity ${duration +
+          100}ms`;
       });
 
       setTimeout(() => {
         const [selectedItemRef] = this.$refs[`selectedItem-${item.id}`];
         selectedItemRef.style.opacity = "1";
         itemRef.$el.style.visibility = "hidden";
-      }, this.animationDuration);
+      }, duration);
     },
     animatedOut(item) {
       const [itemRef] = this.$refs[`item-${item.id}`];
@@ -238,7 +214,7 @@ export default {
 
       const [selectedItemRef] = this.$refs[`selectedItem-${item.id}`];
       const startY =
-        this.selectedItems.length > 1
+        this.selectedList.length > 1
           ? originEl.offsetTop -
             selectedItemRef.offsetTop -
             itemRef.$el.clientHeight

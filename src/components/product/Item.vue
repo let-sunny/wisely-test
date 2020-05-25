@@ -8,7 +8,7 @@
       <h6 class="item-info__name">{{ item.name }}</h6>
       <p class="item-info__description" v-html="item.description"></p>
       <p class="item-info__option">
-        {{ item.price }}원
+        {{ $options.filters.currency(item.price) }}
         <span v-if="showLabel && item.isFreeShipping" class="item-info__option-label">
           무료배송
         </span>
