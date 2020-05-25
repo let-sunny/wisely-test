@@ -145,7 +145,10 @@ export default {
   methods: {
     async select(item, selectedOptionId) {
       try {
-        await this.$store.dispatch("cart/addItem", { ...item, selectedOptionId });
+        await this.$store.dispatch("cart/addItem", {
+          ...item,
+          selectedOptionId
+        });
         if (this.$refs.razorSetOptionModal.isShow) {
           this.$refs.razorSetOptionModal.close();
         }
@@ -186,10 +189,10 @@ export default {
       this.$el.append(itemRef.$el);
       setTimeout(() => {
         const [selectedItemRef] = this.$refs[`selectedItem-${item.id}`];
-        const endY = selectedItemRef.offsetTop + selectedItemRef.clientHeight;
+        const endY = selectedItemRef.offsetTop;
         itemRef.$el.style.transform = `translateY(-${this.$el.clientHeight -
           endY}px)`;
-        itemRef.$el.style.opacity = "0";
+        itemRef.$el.style.opacity = "0.2";
         itemRef.$el.style.pointerEvents = "none";
         itemRef.$el.style.transition = `transform ${duration}ms, opacity ${duration +
           100}ms`;
@@ -262,11 +265,13 @@ export default {
     }
     &__item {
       padding-bottom: 12px;
+      transition: padding-bottom 300ms;
     }
   }
   &__selected-item {
     padding: 0 10px;
     opacity: 0;
+    transition: opacity 300ms;
     .product-divider {
       height: 1px;
       background-color: $light_light_grey;
