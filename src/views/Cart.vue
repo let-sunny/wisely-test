@@ -1,95 +1,86 @@
 <template>
-  <div class="cart-container">
-    <global-header>
-      <template #grid-2>
-        <logo />
-      </template>
-    </global-header>
-    <main class="cart">
+  <main class="cart">
+    <div
+      v-show="!selectedItems.length"
+      class="cart__guide-empty"
+      ref="guideEmpty"
+    >
+      <p class="cart__guide-empty__message" v-html="messages.empty"></p>
+    </div>
+    <div v-show="selectedItems.length" class="cart__selected-item-list">
       <div
-        v-show="!selectedItems.length"
-        class="cart__guide-empty"
-        ref="guideEmpty"
+        class="cart__selected-item"
+        v-for="item in selectedItems"
+        :key="item.id"
+        :ref="`selectedItem-${item.id}`"
       >
-        <p class="cart__guide-empty__message" v-html="messages.empty"></p>
-      </div>
-      <div v-show="selectedItems.length" class="cart__selected-item-list">
-        <div
-          class="cart__selected-item"
-          v-for="item in selectedItems"
-          :key="item.id"
-          :ref="`selectedItem-${item.id}`"
-        >
-          <item :item="item">
-            <div class="cart__selected-item__control">
-              <div class="cart__selected-item__control-button">
-                <button class="remove-button" @click="() => remove(item)">
-                  <img alt="remove item" :src="images.remove" width="12" />
-                </button>
-              </div>
-              <div class="cart__selected-item__control-input">
-                <number-input />
-              </div>
+        <item :item="item">
+          <div class="cart__selected-item__control">
+            <div class="cart__selected-item__control-button">
+              <button class="remove-button" @click="() => remove(item)">
+                <img alt="remove item" :src="images.remove" width="12" />
+              </button>
             </div>
-          </item>
-          <div class="product-divider"></div>
-        </div>
-
-        <dl class="cart__price">
-          <dt class="cart__price-title cart__price-shipping">
-            {{ messages.shippingPrice }}
-          </dt>
-          <dd class="cart__price-content cart__price-shipping">
-            {{ messages.free }}
-          </dd>
-          <dt class="cart__price-title cart__price-total">
-            {{ messages.totalPrice }}
-          </dt>
-          <dd class="cart__price-content cart__price-total">8900원</dd>
-        </dl>
-
-        <div class="cart__order">
-          <button class="cart__order-button">
-            {{ messages.orderButtonName }}
-          </button>
-        </div>
-
-        <div class="cart__shipping-guide">
-          <p
-            class="cart__shipping-guide__message"
-            v-html="messages.shippingGuide"
-          ></p>
-        </div>
+            <div class="cart__selected-item__control-input">
+              <number-input />
+            </div>
+          </div>
+        </item>
+        <div class="product-divider"></div>
       </div>
 
-      <div class="cart__product-list">
-        <h1
-          class="cart__product-list__title"
-          v-if="selectedItems.length && selectedItems.length !== items.length"
-        >
-          {{ messages.productListTile }}
-        </h1>
-        <div
-          class="cart__product-list__item"
-          v-for="item in items"
-          :key="item.id"
-          ref="productListItem"
-        >
-          <item-box @click="() => item.onSelect(item)" :ref="`item-${item.id}`">
-            <item :item="item" :show-label="true"></item>
-          </item-box>
-        </div>
+      <dl class="cart__price">
+        <dt class="cart__price-title cart__price-shipping">
+          {{ messages.shippingPrice }}
+        </dt>
+        <dd class="cart__price-content cart__price-shipping">
+          {{ messages.free }}
+        </dd>
+        <dt class="cart__price-title cart__price-total">
+          {{ messages.totalPrice }}
+        </dt>
+        <dd class="cart__price-content cart__price-total">8900원</dd>
+      </dl>
+
+      <div class="cart__order">
+        <button class="cart__order-button">
+          {{ messages.orderButtonName }}
+        </button>
       </div>
-      <bottom-modal ref="razorSetOptionModal">
-        <razor-select @select="select" :razor="razor" />
-      </bottom-modal>
-    </main>
-  </div>
+
+      <div class="cart__shipping-guide">
+        <p
+          class="cart__shipping-guide__message"
+          v-html="messages.shippingGuide"
+        ></p>
+      </div>
+    </div>
+
+    <div class="cart__product-list">
+      <h1
+        class="cart__product-list__title"
+        v-if="selectedItems.length && selectedItems.length !== items.length"
+      >
+        {{ messages.productListTile }}
+      </h1>
+      <div
+        class="cart__product-list__item"
+        v-for="item in items"
+        :key="item.id"
+        ref="productListItem"
+      >
+        <item-box @click="() => item.onSelect(item)" :ref="`item-${item.id}`">
+          <item :item="item" :show-label="true"></item>
+        </item-box>
+      </div>
+    </div>
+    <bottom-modal ref="razorSetOptionModal">
+      <razor-select @select="select" :razor="razor" />
+    </bottom-modal>
+  </main>
 </template>
 
 <script>
-import GlobalHeader from "@/components/header/index.vue";
-import Logo from "@/components/header/Logo.vue";
 import Item from "@/components/product/Item.vue";
 import ItemBox from "@/components/product/ItemBox.vue";
 import RazorSelect from "@/components/product/RazorSelect.vue";
@@ -99,8 +90,6 @@ import BottomModal from "@/components/common/BottomModal.vue";
 export default {
   name: "Cart",
   components: {
-    GlobalHeader,
-    Logo,
     Item,
     ItemBox,
     NumberInput,
@@ -217,7 +206,7 @@ export default {
       itemRef.$el.style.position = "absolute";
       itemRef.$el.style.opacity = "1";
       itemRef.$el.parentNode.style.paddingBottom = "0";
-      this.$el.querySelector(".cart").append(itemRef.$el);
+      this.$el.append(itemRef.$el);
       setTimeout(() => {
         const [selectedItemRef] = this.$refs[`selectedItem-${item.id}`];
         const endY = selectedItemRef.offsetTop + selectedItemRef.clientHeight;
@@ -225,7 +214,9 @@ export default {
           endY}px)`;
         itemRef.$el.style.opacity = "0";
         itemRef.$el.style.pointerEvents = "none";
-        itemRef.$el.style.transition = `transform ${this.animationDuration}ms, opacity ${this.animationDuration + 100}ms`;
+        itemRef.$el.style.transition = `transform ${
+          this.animationDuration
+        }ms, opacity ${this.animationDuration + 100}ms`;
       });
 
       setTimeout(() => {
@@ -258,7 +249,9 @@ export default {
         itemRef.$el.style.transform = `translateY(0)`;
         itemRef.$el.style.visibility = "visible";
         itemRef.$el.style.opacity = "1";
-        itemRef.$el.style.transition = `transform ${this.animationDuration}ms, opacity ${this.animationDuration - 100}ms`;
+        itemRef.$el.style.transition = `transform ${
+          this.animationDuration
+        }ms, opacity ${this.animationDuration - 100}ms`;
       });
       setTimeout(() => {
         originEl.style.height = "auto";

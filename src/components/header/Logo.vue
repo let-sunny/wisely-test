@@ -1,6 +1,6 @@
 <template>
   <div class="global-header__logo">
-    <img alt="wisely logo" :src="images.logo" height="18" />
+    <img id="header-logo" alt="wisely logo" :src="images.logo" height="18" />
   </div>
 </template>
 
@@ -10,9 +10,15 @@ export default {
   data() {
     return {
       images: {
-        logo: require("@/assets/images/logo.png"),
+        logo: require("@/assets/images/logo.png")
       }
     };
   }
 };
 </script>
+
+<style scoped>
+#header-logo {
+  vertical-align: middle;
+}
+</style>

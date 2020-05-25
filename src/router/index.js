@@ -1,17 +1,31 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import Home from "@/views/Home.vue";
+import Logo from "@/components/header/Logo.vue";
+// import CollapsibleCart from "@/components/header/CollapsibleCart.vue";
+import CollapsibleCartIcon from "@/components/header/CollapsibleCartIcon.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
+    meta: {
+      headerComponent: {
+        middle: Logo,
+        right: CollapsibleCartIcon
+      }
+    },
     name: "Home",
     component: Home
   },
   {
     path: "/cart",
+    meta: {
+      headerComponent: {
+        middle: Logo
+      }
+    },
     name: "Cart",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
