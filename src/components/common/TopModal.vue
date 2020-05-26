@@ -6,7 +6,14 @@
     @wheel.prevent
   >
     <div class="dimmed" @click="close"></div>
-    <div class="content" :style="{ top: !isShow ? `-${contentHeight}px` : 0 }">
+    <div
+      class="content"
+      :style="{
+        top: !isShow
+          ? `-${getContentHeight() + headerHeight}px`
+          : `${headerHeight}px`
+      }"
+    >
       <slot></slot>
     </div>
   </div>
@@ -15,9 +22,8 @@
 <script>
 export default {
   name: "TopModal",
-  mounted() {
-    const [content] = this.$slots.default;
-    this.contentHeight = content.elm.clientHeight;
+  props: {
+    headerHeight: Number
   },
   data() {
     return {
@@ -31,6 +37,18 @@ export default {
     },
     close() {
       this.isShow = false;
+    },
+    toggle() {
+      this.isShow = !this.isShow;
+    },
+    getContentHeight() {
+      const [content] = this.$slots.default;
+      return content.elm?.clientHeight;
+    }
+  },
+  watch: {
+    $route() {
+      this.close();
     }
   }
 };

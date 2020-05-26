@@ -12,7 +12,7 @@
       </template>
     </global-header>
     <div id="page" ref="page">
-      <router-view :header="$refs.header" />
+      <router-view />
     </div>
   </div>
 </template>
@@ -27,7 +27,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.$refs.page.style.paddingTop = `${this.$refs.header.$el.clientHeight}px`;
+      this.$refs.page.style.paddingTop = `${this.$refs.header.$el.querySelector('.header').clientHeight}px`;
     });
   }
 };

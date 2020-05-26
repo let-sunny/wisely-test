@@ -1,6 +1,6 @@
 <template>
   <div class="collapsible-cart__icon">
-    <p class="collapsible-cart__icon-count">{{ count }}</p>
+    <p v-if="count" class="collapsible-cart__icon-count">{{ count }}</p>
     <img
       v-if="count"
       class="collapsible-cart__icon-image--on"

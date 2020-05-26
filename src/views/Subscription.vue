@@ -1,8 +1,5 @@
 <template>
   <main class="subscription">
-    <top-modal ref="topModal">
-      <div style="width: 100%; height: 300px; background-color: white;"></div>
-    </top-modal>
     <div class="body">
       <h1 class="subscription--title">{{ messages.title }}</h1>
       <div class="subscription--cycle">
@@ -11,7 +8,7 @@
         <cycle-select />
       </div>
       <div class="subscription--next">
-        <button class="subscription--next-button" @click="show">
+        <button class="subscription--next-button">
           {{ messages.nextButtonName }}
         </button>
       </div>
@@ -41,17 +38,12 @@
 import FullView from "@/mixins/full-view";
 
 import CycleSelect from "@/components/subscription/CycleSelect.vue";
-import TopModal from "@/components/common/TopModal.vue";
 
 export default {
   name: "Subscription",
   mixins: [FullView],
   components: {
-    CycleSelect,
-    TopModal
-  },
-  props: {
-    header: Object
+    CycleSelect
   },
   data() {
     return {
@@ -62,11 +54,6 @@ export default {
         futurePayday: "이후 결제 예정일"
       }
     };
-  },
-  methods: {
-    show() {
-      this.$refs.topModal.show();
-    }
   }
 };
 </script>

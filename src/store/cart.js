@@ -38,7 +38,8 @@ const state = {
       isFreeShipping: true,
       hasOptionModal: true,
       thumbnail: require("@/assets/images/item_razor_set.png"),
-      orderNo: 0
+      orderNo: 0,
+      hasSubscription: false
     },
     {
       id: 2,
@@ -48,7 +49,8 @@ const state = {
       price: "9600",
       isFreeShipping: false,
       thumbnail: require("@/assets/images/item_blade.png"),
-      orderNo: 1
+      orderNo: 1,
+      hasSubscription: true
     },
     {
       id: 3,
@@ -58,7 +60,8 @@ const state = {
       price: "4500",
       isFreeShipping: false,
       thumbnail: require("@/assets/images/item_shaving_gel.png"),
-      orderNo: 2
+      orderNo: 2,
+      hasSubscription: true
     },
     {
       id: 4,
@@ -68,7 +71,8 @@ const state = {
       price: "3900",
       isFreeShipping: false,
       thumbnail: require("@/assets/images/item_aftershave.png"),
-      orderNo: 3
+      orderNo: 3,
+      hasSubscription: true
     }
   ],
   selectedList: []
@@ -76,7 +80,11 @@ const state = {
 
 // getters
 const getters = {
-  count: state => state.selectedList.length,
+  count: state =>
+    state.selectedList.reduce(
+      (accumulatedValue, selectedItem) => accumulatedValue + selectedItem.count,
+      0
+    ),
   totalPrice: state =>
     state.selectedList.reduce(
       (accumulatedValue, selectedItem) =>
