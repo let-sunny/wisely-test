@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <global-header>
+    <global-header ref="header">
       <template #grid-1 v-if="$route.meta.headerComponent">
         <component v-bind:is="$route.meta.headerComponent.left"></component>
       </template>
@@ -11,7 +11,9 @@
         <component v-bind:is="$route.meta.headerComponent.right"></component>
       </template>
     </global-header>
-    <router-view />
+    <div id="page" ref="page">
+      <router-view :header="$refs.header" />
+    </div>
   </div>
 </template>
 
@@ -22,10 +24,19 @@ export default {
   name: "App",
   components: {
     GlobalHeader
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.$refs.page.style.paddingTop = `${this.$refs.header.$el.clientHeight}px`;
+    });
   }
 };
 </script>
 
 <style lang="scss">
 @import "~@/assets/styles/reset.scss";
+
+#page {
+  box-sizing: border-box;
+}
 </style>

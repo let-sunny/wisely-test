@@ -20,6 +20,10 @@ export default {
 
 <style lang="scss" scoped>
 .global-header {
+  position: fixed;
+  width: 100%;
+  background-color: $white;
+  z-index: 10;
   display: grid;
   padding: 0 16px;
   grid-template-columns: repeat(3, 1fr);

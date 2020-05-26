@@ -1,15 +1,12 @@
 <template>
   <div
-    class="bottom-modal"
-    :class="{ 'bottom-modal--show': isShow }"
+    class="top-modal"
+    :class="{ 'top-modal--show': isShow }"
     @touchmove.prevent
     @wheel.prevent
   >
     <div class="dimmed" @click="close"></div>
-    <div
-      class="content"
-      :style="{ bottom: !isShow ? `-${contentHeight}px` : 0 }"
-    >
+    <div class="content" :style="{ top: !isShow ? `-${contentHeight}px` : 0 }">
       <slot></slot>
     </div>
   </div>
@@ -17,7 +14,7 @@
 
 <script>
 export default {
-  name: "BottomModal",
+  name: "TopModal",
   mounted() {
     const [content] = this.$slots.default;
     this.contentHeight = content.elm.clientHeight;
@@ -40,9 +37,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.bottom-modal {
+.top-modal {
   $animation_duration: 0.4s;
-  z-index: 10;
+  z-index: 5;
   position: fixed;
   width: 100%;
   height: 100%;
@@ -67,7 +64,8 @@ export default {
     position: absolute;
     left: 0;
     right: 0;
-    transition: bottom $animation_duration;
+    transition: top $animation_duration;
+    box-shadow: 0 4px 4px rgba($black, 0.4);
   }
 
   &--show {
@@ -78,7 +76,7 @@ export default {
       transition: opacity $animation_duration;
     }
     .content {
-      transition: bottom $animation_duration;
+      transition: top $animation_duration;
     }
   }
 }

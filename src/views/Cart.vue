@@ -45,7 +45,10 @@
       </dl>
 
       <div class="cart__order">
-        <button class="cart__order-button">
+        <button
+          class="cart__order-button"
+          @click="$router.push({ name: 'Subscription' })"
+        >
           {{ messages.orderButtonName }}
         </button>
       </div>
@@ -83,9 +86,9 @@
 </template>
 
 <script>
-import Item from "@/components/product/Item.vue";
-import ItemBox from "@/components/product/ItemBox.vue";
-import RazorSelect from "@/components/product/RazorSelect.vue";
+import Item from "@/components/cart/Item.vue";
+import ItemBox from "@/components/cart/ItemBox.vue";
+import RazorSelect from "@/components/cart/RazorSelect.vue";
 import NumberInput from "@/components/common/NumberInput.vue";
 import BottomModal from "@/components/common/BottomModal.vue";
 
