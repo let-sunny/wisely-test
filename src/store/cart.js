@@ -11,7 +11,8 @@ const state = {
           color: "navy",
           description:
             "<span style='color: #000000'>네이비</span> 핸들 + 면도날 2개입",
-          thumbnail: require("@/assets/images/razor_navy.png")
+          thumbnail: require("@/assets/images/razor_navy.png"),
+          productThumbnail: require("@/assets/images/item_razor_set_navy.png")
         },
         {
           id: 2,
@@ -19,7 +20,8 @@ const state = {
           color: "blue",
           description:
             "<span style='color: #3A81C1'>블루</span> 핸들 + 면도날 2개입",
-          thumbnail: require("@/assets/images/razor_blue.png")
+          thumbnail: require("@/assets/images/razor_blue.png"),
+          productThumbnail: require("@/assets/images/item_razor_set_blue.png")
         },
         {
           id: 3,
@@ -27,7 +29,8 @@ const state = {
           color: "grey",
           description:
             "<span style='color: #858585'>그레이 핸들</span> + 면도날 2개입",
-          thumbnail: require("@/assets/images/razor_grey.png")
+          thumbnail: require("@/assets/images/razor_grey.png"),
+          productThumbnail: require("@/assets/images/item_razor_set_grey.png")
         }
       ],
       description: "면도기 핸들+면도날 2개입",
@@ -89,11 +92,13 @@ const actions = {
       selectedItem => selectedItem.id === item.id
     );
     let description = item.description;
+    let thumbnail = item.thumbnail;
     if (item.selectedOptionId) {
       const option = item.options.find(
         option => option.id === item.selectedOptionId
       );
       description = option ? option.description : item.description;
+      thumbnail = option ? option.productThumbnail : item.thumbnail;
     }
     if (!selectedItem) {
       commit("SET_SELECTED_LIST", [
@@ -101,7 +106,8 @@ const actions = {
         {
           ...item,
           count: 1,
-          description
+          description,
+          thumbnail
         }
       ]);
     }

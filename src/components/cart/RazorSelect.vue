@@ -40,10 +40,7 @@
       </div>
     </div>
     <div class="razor-select__selection">
-      <button
-        class="razor-select__selection-button"
-        @click="$emit('select', razor, selectedOption)"
-      >
+      <button class="razor-select__selection-button" @click="select">
         {{ messages.select }}
       </button>
     </div>
@@ -65,6 +62,7 @@ export default {
   },
   data() {
     return {
+      defaultOption: null,
       selectedOption: null,
       messages: {
         title: "면도기 색상을 선택해주세요",
@@ -72,10 +70,17 @@ export default {
       }
     };
   },
+  methods: {
+    select() {
+      this.$emit("select", this.razor, this.selectedOption);
+      this.selectedOption = this.defaultOption;
+    }
+  },
   watch: {
     razor(newVal) {
       if (newVal) {
         this.selectedOption = newVal.options[0]?.id;
+        this.defaultOption = this.selectedOption;
       }
     }
   }
