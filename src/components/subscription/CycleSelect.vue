@@ -59,7 +59,11 @@ export default {
   },
   created() {
     if (!this.item.cycle) {
-      this.$emit("select", this.item, this.bestCycle);
+      const cycle = this.filteredCycles.find(
+        cycle => cycle.id === this.bestCycle.id
+      );
+      const [nearCycle] = this.filteredCycles;
+      this.$emit("select", this.item, cycle || nearCycle);
     }
   },
   mounted() {

@@ -71,9 +71,10 @@ export default {
       );
     },
     standardItem() {
-      return this.$store.state.cart.selectedList.find(
+      const item = this.$store.state.cart.selectedList.find(
         item => item.isSubscriptionStandard
       );
+      return item || {};
     },
     standardCycleValue() {
       return this.standardItem?.cycle?.value;
