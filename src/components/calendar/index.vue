@@ -98,7 +98,7 @@ export default {
         submitButtonName: date => `${date}에 결제하기`
       },
       images: {
-        arrow: require("@/assets/images/calendar_arrow.png")
+        arrow: require("@/assets/images/cycle/calendar_arrow.png")
       },
       standardDate: addDays(new Date(), 1),
       selectedDate: null,

@@ -11,8 +11,8 @@ const state = {
           color: "navy",
           description:
             "<span style='color: #000000'>네이비</span> 핸들 + 면도날 2개입",
-          thumbnail: require("@/assets/images/razor_navy.png"),
-          productThumbnail: require("@/assets/images/item_razor_set_navy.png")
+          thumbnail: require("@/assets/images/product/razor_navy.png"),
+          productThumbnail: require("@/assets/images/product/item_razor_set_navy.png")
         },
         {
           id: 2,
@@ -20,8 +20,8 @@ const state = {
           color: "blue",
           description:
             "<span style='color: #3A81C1'>블루</span> 핸들 + 면도날 2개입",
-          thumbnail: require("@/assets/images/razor_blue.png"),
-          productThumbnail: require("@/assets/images/item_razor_set_blue.png")
+          thumbnail: require("@/assets/images/product/razor_blue.png"),
+          productThumbnail: require("@/assets/images/product/item_razor_set_blue.png")
         },
         {
           id: 3,
@@ -29,15 +29,15 @@ const state = {
           color: "grey",
           description:
             "<span style='color: #858585'>그레이 핸들</span> + 면도날 2개입",
-          thumbnail: require("@/assets/images/razor_grey.png"),
-          productThumbnail: require("@/assets/images/item_razor_set_grey.png")
+          thumbnail: require("@/assets/images/product/razor_grey.png"),
+          productThumbnail: require("@/assets/images/product/item_razor_set_grey.png")
         }
       ],
       description: "면도기 핸들+면도날 2개입",
       price: "8900",
       isFreeShipping: true,
       hasOptionModal: true,
-      thumbnail: require("@/assets/images/item_razor_set.png"),
+      thumbnail: require("@/assets/images/product/item_razor_set.png"),
       orderNo: 0,
       hasSubscription: false,
       isSubscriptionStandard: false
@@ -49,7 +49,7 @@ const state = {
       description: "면도날 4개입",
       price: "9600",
       isFreeShipping: false,
-      thumbnail: require("@/assets/images/item_blade.png"),
+      thumbnail: require("@/assets/images/product/item_blade.png"),
       orderNo: 1,
       hasSubscription: true,
       isSubscriptionStandard: true
@@ -61,7 +61,7 @@ const state = {
       description: "스탠다드 150ml",
       price: "4500",
       isFreeShipping: false,
-      thumbnail: require("@/assets/images/item_shaving_gel.png"),
+      thumbnail: require("@/assets/images/product/item_shaving_gel.png"),
       orderNo: 2,
       hasSubscription: true,
       isSubscriptionStandard: false
@@ -73,7 +73,7 @@ const state = {
       description: "스탠다드 60ml",
       price: "3900",
       isFreeShipping: false,
-      thumbnail: require("@/assets/images/item_aftershave.png"),
+      thumbnail: require("@/assets/images/product/item_aftershave.png"),
       orderNo: 3,
       hasSubscription: true,
       isSubscriptionStandard: false

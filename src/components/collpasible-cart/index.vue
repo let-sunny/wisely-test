@@ -31,7 +31,7 @@ export default {
   data() {
     return {
       images: {
-        cartArrow: require("@/assets/images/cart_arrow.png")
+        cartArrow: require("@/assets/images/cart/cart_arrow.png")
       }
     };
   },

@@ -131,7 +131,7 @@ export default {
       razor: {},
       animationDuration: 800,
       images: {
-        remove: require("@/assets/images/item_remove_btn.png")
+        remove: require("@/assets/images/product/item_remove_btn.png")
       },
       messages: {
         empty: "장바구니가 비어있습니다<br />상품을 추가해주세요",

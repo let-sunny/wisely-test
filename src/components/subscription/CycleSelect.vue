@@ -110,7 +110,7 @@ export default {
         label: "BEST"
       },
       images: {
-        titleArrow: require("@/assets/images/cycle_arrow.png")
+        titleArrow: require("@/assets/images/cycle/cycle_arrow.png")
       },
       cycles: [
         {
@@ -118,8 +118,8 @@ export default {
           value: 4,
           unit: "주",
           icon: {
-            on: require("@/assets/images/cycle_1.png"),
-            off: require("@/assets/images/cycle_1_disabled.png")
+            on: require("@/assets/images/cycle/cycle_1.png"),
+            off: require("@/assets/images/cycle/cycle_1_disabled.png")
           }
         },
         {
@@ -127,8 +127,8 @@ export default {
           value: 8,
           unit: "주",
           icon: {
-            on: require("@/assets/images/cycle_2.png"),
-            off: require("@/assets/images/cycle_2_disabled.png")
+            on: require("@/assets/images/cycle/cycle_2.png"),
+            off: require("@/assets/images/cycle/cycle_2_disabled.png")
           }
         },
         {
@@ -136,8 +136,8 @@ export default {
           value: 12,
           unit: "주",
           icon: {
-            on: require("@/assets/images/cycle_3.png"),
-            off: require("@/assets/images/cycle_3_disabled.png")
+            on: require("@/assets/images/cycle/cycle_3.png"),
+            off: require("@/assets/images/cycle/cycle_3_disabled.png")
           }
         },
         {
@@ -145,8 +145,8 @@ export default {
           value: 16,
           unit: "주",
           icon: {
-            on: require("@/assets/images/cycle_3.png"),
-            off: require("@/assets/images/cycle_3_disabled.png")
+            on: require("@/assets/images/cycle/cycle_3.png"),
+            off: require("@/assets/images/cycle/cycle_3_disabled.png")
           }
         },
         {
@@ -154,8 +154,8 @@ export default {
           value: 24,
           unit: "주",
           icon: {
-            on: require("@/assets/images/cycle_3.png"),
-            off: require("@/assets/images/cycle_3_disabled.png")
+            on: require("@/assets/images/cycle/cycle_3.png"),
+            off: require("@/assets/images/cycle/cycle_3_disabled.png")
           }
         }
       ],
@@ -164,8 +164,8 @@ export default {
         value: 8,
         unit: "주",
         icon: {
-          on: require("@/assets/images/cycle_2.png"),
-          off: require("@/assets/images/cycle_2_disabled.png")
+          on: require("@/assets/images/cycle/cycle_2.png"),
+          off: require("@/assets/images/cycle/cycle_2_disabled.png")
         }
       }
     };

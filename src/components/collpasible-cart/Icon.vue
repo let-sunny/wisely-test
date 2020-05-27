@@ -27,8 +27,8 @@ export default {
   data() {
     return {
       images: {
-        cartOn: require("@/assets/images/cart_on.png"),
-        cartOff: require("@/assets/images/cart_off.png")
+        cartOn: require("@/assets/images/cart/cart_on.png"),
+        cartOff: require("@/assets/images/cart/cart_off.png")
       }
     };
   }

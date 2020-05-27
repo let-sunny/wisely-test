@@ -57,7 +57,7 @@ export default {
       background-repeat: no-repeat;
       background-position: center;
     }
-    $image-path: "~@/assets/images/";
+    $image-path: "~@/assets/images/cart/";
     &--plus {
       border-radius: 0 2px 2px 0;
       background-image: url("#{$image-path}input_control_plus.png");

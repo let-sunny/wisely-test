@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       images: {
-        plus: require("@/assets/images/cart_plus_btn.png")
+        plus: require("@/assets/images/cart/cart_plus_btn.png")
       }
     };
   }
