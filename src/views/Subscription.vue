@@ -1,8 +1,8 @@
 <template>
   <main class="subscription">
     <div class="body">
-      <h1 class="subscription--title">{{ messages.title }}</h1>
-      <div class="subscription--cycle">
+      <h1 class="subscription__title">{{ messages.title }}</h1>
+      <div class="subscription__cycle">
         <cycle-select
           v-for="item in selectedList"
           :key="item.id"
@@ -15,8 +15,8 @@
           @setOpenItemId="setOpenItemId"
         />
       </div>
-      <div class="subscription--next">
-        <button class="subscription--next-button">
+      <div class="subscription__next">
+        <button class="subscription__next-button" @click="openCalendar">
           {{ messages.nextButtonName }}
         </button>
       </div>
@@ -39,6 +39,9 @@
         </dd>
       </dl>
     </div>
+    <bottom-modal ref="calendar">
+      <calendar />
+    </bottom-modal>
   </main>
 </template>
 
@@ -48,13 +51,18 @@ import ko from "date-fns/locale/ko";
 import addDays from "date-fns/addDays";
 import addWeeks from "date-fns/addWeeks";
 import FullView from "@/mixins/full-view";
+
 import CycleSelect from "@/components/subscription/CycleSelect.vue";
+import BottomModal from "@/components/common/BottomModal.vue";
+import Calendar from "@/components/calendar/index.vue";
 
 export default {
   name: "Subscription",
   mixins: [FullView],
   components: {
-    CycleSelect
+    CycleSelect,
+    BottomModal,
+    Calendar
   },
   computed: {
     selectedList() {
@@ -102,6 +110,9 @@ export default {
     },
     getFormattedDate(date) {
       return format(date, "MMMM do EEEE", { locale: ko });
+    },
+    openCalendar() {
+      this.$refs.calendar.show();
     }
   }
 };
@@ -112,15 +123,15 @@ export default {
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
   height: 100%;
-  &--title {
+  &__title {
     @include font(26px, 300);
     color: $text_title;
     padding: 25px 0;
   }
-  &--cycle {
+  &__cycle {
     flex: 1;
   }
-  &--next {
+  &__next {
     z-index: 2;
     height: 52px;
     padding: 40px 0;
