@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import CollapsibleCartIcon from "@/components/header/collpasible-cart/CollapsibleCartIcon.vue";
+import CollapsibleCartIcon from "@/components/collpasible-cart/Icon.vue";
 
 export default {
   name: "CollapsibleCart",

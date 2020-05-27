@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import Item from "@/components/header/collpasible-cart/Item.vue";
+import Item from "@/components/collpasible-cart/Item.vue";
 
 export default {
   name: "CollapsibleCartContent",

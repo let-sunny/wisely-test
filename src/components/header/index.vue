@@ -19,7 +19,7 @@
 
 <script>
 import TopModal from "@/components/common/TopModal.vue";
-import CollapsibleCartContent from "@/components/header/collpasible-cart/CollapsibleCartContent.vue";
+import CollapsibleCartContent from "@/components/collpasible-cart/Content.vue";
 
 export default {
   name: "GlobalHeader",

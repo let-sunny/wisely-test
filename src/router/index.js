@@ -2,8 +2,8 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "@/views/Home.vue";
 import Logo from "@/components/header/Logo.vue";
-import CollapsibleCart from "@/components/header/collpasible-cart/CollapsibleCart.vue";
-import CollapsibleCartIcon from "@/components/header/collpasible-cart/CollapsibleCartIcon.vue";
+import CollapsibleCart from "@/components/collpasible-cart/index.vue";
+import CollapsibleCartIcon from "@/components/collpasible-cart/Icon.vue";
 
 Vue.use(VueRouter);
 
