@@ -3,9 +3,17 @@
     <div class="body">
       <h1 class="subscription--title">{{ messages.title }}</h1>
       <div class="subscription--cycle">
-        <cycle-select />
-        <cycle-select />
-        <cycle-select />
+        <cycle-select
+          v-for="item in selectedList"
+          :key="item.id"
+          :item="item"
+          :open-item-id="openItemId"
+          :standard-cycle-value="
+            item.id !== standardItem.id ? standardCycleValue : null
+          "
+          @select="select"
+          @setOpenItemId="setOpenItemId"
+        />
       </div>
       <div class="subscription--next">
         <button class="subscription--next-button">
@@ -21,13 +29,13 @@
         <dd
           class="subscription__pay-day-content subscription__pay-day-content--highlight"
         >
-          {{ "12월 31일 월요일" }}
+          {{ getFormattedDate(tomorrow) }}
         </dd>
         <dt class="subscription__pay-day-title">
           {{ messages.futurePayday }}
         </dt>
         <dd class="subscription__pay-day-content">
-          {{ "12월 31일 월요일" }}
+          {{ getFormattedDate(futurePayDate) }}
         </dd>
       </dl>
     </div>
@@ -35,8 +43,11 @@
 </template>
 
 <script>
+import { format } from "date-fns";
+import ko from "date-fns/locale/ko";
+import addDays from "date-fns/addDays";
+import addWeeks from "date-fns/addWeeks";
 import FullView from "@/mixins/full-view";
-
 import CycleSelect from "@/components/subscription/CycleSelect.vue";
 
 export default {
@@ -45,6 +56,24 @@ export default {
   components: {
     CycleSelect
   },
+  computed: {
+    selectedList() {
+      return this.$store.state.cart.selectedList.filter(
+        item => item.hasSubscription
+      );
+    },
+    standardItem() {
+      return this.$store.state.cart.selectedList.find(
+        item => item.isSubscriptionStandard
+      );
+    },
+    standardCycleValue() {
+      return this.standardItem?.cycle?.value;
+    },
+    futurePayDate() {
+      return addWeeks(this.tomorrow, this.standardItem?.cycle?.value || 0);
+    }
+  },
   data() {
     return {
       messages: {
@@ -52,8 +81,28 @@ export default {
         nextButtonName: "다음",
         nextPayday: "다음 결제 예정일",
         futurePayday: "이후 결제 예정일"
-      }
+      },
+      openItemId: null,
+      tomorrow: addDays(new Date(), 1)
     };
+  },
+  methods: {
+    async select(item, cycle) {
+      try {
+        await this.$store.dispatch("cart/selectSubscriptionCycle", {
+          item,
+          cycle
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    setOpenItemId(id) {
+      this.openItemId = id;
+    },
+    getFormattedDate(date) {
+      return format(date, "MMMM do EEEE", { locale: ko });
+    }
   }
 };
 </script>
@@ -102,6 +151,7 @@ export default {
     padding: 0 16px;
   }
   .footer {
+    z-index: 2;
     padding: 22px 26px;
     background: $white;
     box-shadow: 0 -4px 4px rgba($black, 0.15);

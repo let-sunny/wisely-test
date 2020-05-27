@@ -53,7 +53,10 @@ export default {
     selectedList() {
       return this.$store.state.cart.selectedList.map(item => ({
         ...item,
-        option: item.hasSubscription ? "8주 마다" : "이번만 구매"
+        subscription:
+          item.hasSubscription && item.cycle
+            ? `${item.cycle.value}${item.cycle.unit} 마다`
+            : "이번만 구매"
       }));
     },
     totalPrice() {

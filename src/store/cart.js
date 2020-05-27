@@ -39,7 +39,8 @@ const state = {
       hasOptionModal: true,
       thumbnail: require("@/assets/images/item_razor_set.png"),
       orderNo: 0,
-      hasSubscription: false
+      hasSubscription: false,
+      isSubscriptionStandard: false
     },
     {
       id: 2,
@@ -50,7 +51,8 @@ const state = {
       isFreeShipping: false,
       thumbnail: require("@/assets/images/item_blade.png"),
       orderNo: 1,
-      hasSubscription: true
+      hasSubscription: true,
+      isSubscriptionStandard: true
     },
     {
       id: 3,
@@ -61,7 +63,8 @@ const state = {
       isFreeShipping: false,
       thumbnail: require("@/assets/images/item_shaving_gel.png"),
       orderNo: 2,
-      hasSubscription: true
+      hasSubscription: true,
+      isSubscriptionStandard: false
     },
     {
       id: 4,
@@ -72,7 +75,8 @@ const state = {
       isFreeShipping: false,
       thumbnail: require("@/assets/images/item_aftershave.png"),
       orderNo: 3,
-      hasSubscription: true
+      hasSubscription: true,
+      isSubscriptionStandard: false
     }
   ],
   selectedList: []
@@ -146,6 +150,15 @@ const actions = {
       });
       commit("SET_SELECTED_LIST", newSelectedList);
     }
+  },
+  async selectSubscriptionCycle({ commit, dispatch }, { item, cycle }) {
+    const index = await dispatch("getSelectedItemIndex", item.id);
+    const newSelectedList = [...state.selectedList];
+    newSelectedList.splice(index, 1, {
+      ...item,
+      cycle
+    });
+    commit("SET_SELECTED_LIST", newSelectedList);
   },
   getSelectedItemIndex({ state }, id) {
     return state.selectedList.findIndex(selectedItem => selectedItem.id === id);

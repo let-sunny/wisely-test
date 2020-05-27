@@ -2,13 +2,16 @@
   <div class="cycle-select" :class="{ 'cycle-select--open': isOpen }">
     <a class="cycle-select__title-box" @click="toggle">
       <h1 class="cycle-select__title-box__title">
-        {{ messages.title(productName) }}
+        {{ messages.title(item.name) }}
       </h1>
       <div class="cycle-select__title-box__description">
-        <span class="cycle-select__title-box__description__label">
+        <span
+          class="cycle-select__title-box__description__label"
+          v-if="bestCycle.id === selectedCycle.id"
+        >
           {{ messages.label }}
         </span>
-        {{ messages.cycleDescription(bestCycle.name, bestCycle.unit) }}
+        {{ messages.cycleDescription(selectedCycle.value, selectedCycle.unit) }}
         <img
           class="cycle-select__title-box__description__arrow"
           :class="{
@@ -23,18 +26,23 @@
     <div class="cycle-select__option" ref="cycleOption">
       <a
         class="cycle-select__option-item"
-        :class="{ 'cycle-select__option-item--on': cycle.id === 1 }"
-        v-for="cycle in cycles"
+        :class="{
+          'cycle-select__option-item--on': isSelected(cycle, selectedCycle)
+        }"
+        v-for="cycle in filteredCycles"
         :key="cycle.id"
+        @click="() => select(item, cycle)"
       >
         <img
           class="cycle-select__option-item-image"
-          :alt="`${cycle.name}${cycle.unit} 배송 주기`"
-          :src="cycle.icon.on"
+          :alt="`${cycle.value}${cycle.unit} 배송 주기`"
+          :src="
+            isSelected(cycle, selectedCycle) ? cycle.icon.on : cycle.icon.off
+          "
           width="48"
         />
         <p class="cycle-select__option-item-message">
-          {{ messages.cycleDescription(cycle.name, cycle.unit) }}
+          {{ messages.cycleDescription(cycle.value, cycle.unit) }}
         </p>
       </a>
     </div>
@@ -45,9 +53,13 @@
 export default {
   name: "CycleSelect",
   props: {
-    productName: {
-      type: String,
-      default: ""
+    item: Object,
+    openItemId: Number,
+    standardCycleValue: Number
+  },
+  created() {
+    if (!this.item.cycle) {
+      this.$emit("select", this.item, this.bestCycle);
     }
   },
   mounted() {
@@ -64,6 +76,31 @@ export default {
       this.onTransitionEnd
     );
   },
+  computed: {
+    selectedCycle() {
+      if (this.item.cycle) {
+        return this.cycles.find(cycle => cycle.id === this.item.cycle.id);
+      }
+      return this.bestCycle;
+    },
+    filteredCycles() {
+      if (this.standardCycleValue) {
+        return this.cycles.reduce((filteredCycles, cycle) => {
+          const isStandardValue = this.standardCycleValue === cycle.value;
+          const isDoubledValue =
+            filteredCycles.length &&
+            filteredCycles[filteredCycles.length - 1].value * 2 === cycle.value;
+          if (isStandardValue || isDoubledValue) {
+            filteredCycles.push(cycle);
+            return filteredCycles;
+          }
+          return filteredCycles;
+        }, []);
+      } else {
+        return this.cycles;
+      }
+    }
+  },
   data() {
     return {
       isOpen: false,
@@ -78,7 +115,7 @@ export default {
       cycles: [
         {
           id: 1,
-          name: 4,
+          value: 4,
           unit: "주",
           icon: {
             on: require("@/assets/images/cycle_1.png"),
@@ -87,7 +124,7 @@ export default {
         },
         {
           id: 2,
-          name: 8,
+          value: 8,
           unit: "주",
           icon: {
             on: require("@/assets/images/cycle_2.png"),
@@ -96,7 +133,7 @@ export default {
         },
         {
           id: 3,
-          name: 12,
+          value: 12,
           unit: "주",
           icon: {
             on: require("@/assets/images/cycle_3.png"),
@@ -105,7 +142,16 @@ export default {
         },
         {
           id: 4,
-          name: 16,
+          value: 16,
+          unit: "주",
+          icon: {
+            on: require("@/assets/images/cycle_3.png"),
+            off: require("@/assets/images/cycle_3_disabled.png")
+          }
+        },
+        {
+          id: 5,
+          value: 24,
           unit: "주",
           icon: {
             on: require("@/assets/images/cycle_3.png"),
@@ -115,7 +161,7 @@ export default {
       ],
       bestCycle: {
         id: 2,
-        name: 8,
+        value: 8,
         unit: "주",
         icon: {
           on: require("@/assets/images/cycle_2.png"),
@@ -126,12 +172,25 @@ export default {
   },
   methods: {
     toggle() {
+      if (!this.isOpen) {
+        this.$emit("setOpenItemId", this.item.id);
+      }
       this.isOpen = !this.isOpen;
+    },
+    close() {
+      this.isOpen = false;
+    },
+    isSelected(cycle, selectedCycle) {
+      return cycle.id === selectedCycle.id;
     },
     onTransitionEnd() {
       if (!this.isOpen) {
         this.$refs.cycleOption.style.display = "none";
       }
+    },
+    select(item, cycle) {
+      this.$emit("select", item, cycle);
+      this.close();
     }
   },
   watch: {
@@ -147,6 +206,19 @@ export default {
           this.$el.style.minHeight = "0";
         }
       });
+    },
+    filteredCycles(newVal) {
+      if (!newVal.find(cycle => cycle.value === this.selectedCycle.value)) {
+        const cycle = newVal.find(
+          cycle => cycle.value === this.standardCycleValue
+        );
+        this.select(this.item, cycle);
+      }
+    },
+    openItemId(newVal) {
+      if (newVal && newVal !== this.item.id && this.isOpen) {
+        this.close();
+      }
     }
   }
 };
@@ -155,10 +227,11 @@ export default {
 <style lang="scss" scoped>
 .cycle-select {
   $box-height: 60px;
+  $open-animation-duration: 500ms;
   margin-bottom: 10px;
   position: relative;
   min-height: 0;
-  transition: min-height 600ms;
+  transition: min-height 400ms;
   &__title-box {
     height: $box-height;
     display: flex;
@@ -201,20 +274,20 @@ export default {
     }
   }
   &__option {
-    z-index: -1;
     position: absolute;
     width: 100%;
     opacity: 0;
     max-height: 0;
     visibility: hidden;
     display: none;
-    transition: visibility 0s 800ms, opacity 800ms;
+    transition: visibility 0s $open-animation-duration,
+      opacity $open-animation-duration;
     &--open {
       z-index: 2;
       opacity: 1;
       max-height: 100vh;
       visibility: visible;
-      transition: visibility 0s, opacity 800ms;
+      transition: visibility 0s, opacity $open-animation-duration;
     }
     &-item {
       height: $box-height;
@@ -225,6 +298,7 @@ export default {
       border-radius: 4px;
       box-sizing: border-box;
       padding: 0 39px 0 18px;
+      background-color: $white;
       border: 1px solid $light_light_grey;
       margin: 10px 0;
       &--on {

@@ -8,7 +8,7 @@
       <h6 class="item-info__name">{{ item.name }} - <span class="item-info__count">{{item.count}}개</span></h6>
       <p class="item-info__description" v-html="item.description"></p>
       <p class="item-info__option">
-        {{ item.hasSubscription ? "8주 마다" : "이번만 구매" }}
+        {{ item.subscription }}
       </p>
     </div>
     <div class="item-info__price">
