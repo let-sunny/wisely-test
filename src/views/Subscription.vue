@@ -66,7 +66,7 @@ export default {
   },
   computed: {
     selectedList() {
-      return this.$store.state.cart.selectedList.filter(
+      return this.$store.getters["cart/orderedSelectedList"].filter(
         item => item.hasSubscription
       );
     },

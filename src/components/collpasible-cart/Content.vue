@@ -51,7 +51,7 @@ export default {
   },
   computed: {
     selectedList() {
-      return this.$store.state.cart.selectedList.map(item => ({
+      return this.$store.getters["cart/orderedSelectedList"].map(item => ({
         ...item,
         subscription:
           item.hasSubscription && item.cycle

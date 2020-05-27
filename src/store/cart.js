@@ -94,7 +94,9 @@ const getters = {
       (accumulatedValue, selectedItem) =>
         accumulatedValue + selectedItem.count * selectedItem.price,
       0
-    )
+    ),
+  orderedSelectedList: state =>
+    [...state.selectedList].sort((a, b) => a.orderNo - b.orderNo)
 };
 
 // actions
