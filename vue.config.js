@@ -1,4 +1,7 @@
 module.exports = {
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/wisely-test/'
+    : '/',
   css: {
     loaderOptions: {
       // by default the `sass` option will apply to both syntaxes
