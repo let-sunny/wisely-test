@@ -10,6 +10,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
+    redirect: { name: "Cart" },
     meta: {
       headerComponent: {
         middle: Logo,
