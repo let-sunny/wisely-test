@@ -3,18 +3,21 @@
     class="calendar__day"
     :class="{
       'calendar__day--today': isToday,
-      'calendar__day--selected': isSelected
+      'calendar__day--selected': isSelected,
+      'calendar__day--disabled': isDisabled
     }"
   >
-    <button
-      class="calendar__day-button"
-      @click="$emit('select')"
-      :disabled="isDisabled"
-    >
-      <p class="calendar__day-button-text">
-        <slot></slot>
-      </p>
-    </button>
+    <div class="calendar__day__box">
+      <button
+        class="calendar__day-button"
+        @click="$emit('select')"
+        :disabled="isDisabled"
+      >
+        <p class="calendar__day-button-text">
+          <slot></slot>
+        </p>
+      </button>
+    </div>
   </td>
 </template>
 
@@ -30,10 +33,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@mixin filled() {
+  background-color: $point1;
+  border-radius: 50%;
+  p {
+    color: $white;
+  }
+}
+
+@mixin outline() {
+  border-radius: 50%;
+  border: 1.5px solid $point1;
+}
 .calendar__day {
+  &__box {
+    display: flex;
+    justify-content: center;
+  }
   &-button {
-    width: 100%;
-    height: 100%;
+    $size: 32px;
+    width: $size;
+    height: $size;
     display: flex;
     justify-content: center;
     &:disabled {
@@ -49,20 +69,19 @@ export default {
     }
   }
   &--today {
-    border-radius: 50%;
-    border: 1.5px solid $point1;
+    @include outline();
   }
   &--selected {
     .calendar__day-button {
-      $size: calc(100% - 4px);
-      width: $size;
-      height: $size;
-      position: relative;
-      background-color: $point1;
-      border-radius: 50%;
-      &-text {
-        color: $white;
-      }
+      @include filled();
+    }
+  }
+
+  &--selected:hover,
+  &--today:hover {
+    @include outline();
+    .calendar__day-button {
+      @include filled();
     }
   }
 }

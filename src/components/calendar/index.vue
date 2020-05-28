@@ -101,7 +101,7 @@ export default {
         arrow: require("@/assets/images/cycle/calendar_arrow.png")
       },
       standardDate: addDays(new Date(), 1),
-      selectedDate: null,
+      selectedDate: addDays(new Date(), 1),
       tomorrow: addDays(new Date(), 1),
       daysOfWeek: eachDayOfInterval({
         start: setDay(new Date(), 0),
