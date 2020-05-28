@@ -66,20 +66,6 @@ export default {
       this.$emit("select", this.item, cycle || nearCycle);
     }
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.$refs.cycleOption.addEventListener(
-        "transitionend",
-        this.onTransitionEnd
-      );
-    });
-  },
-  beforeDestroy() {
-    this.$refs.cycleOption.removeEventListener(
-      "transitionend",
-      this.onTransitionEnd
-    );
-  },
   computed: {
     selectedCycle() {
       if (this.item.cycle) {
@@ -187,11 +173,6 @@ export default {
     isSelected(cycle, selectedCycle) {
       return cycle.id === selectedCycle.id;
     },
-    onTransitionEnd() {
-      if (!this.isOpen) {
-        this.$refs.cycleOption.style.display = "none";
-      }
-    },
     select(item, cycle) {
       this.$emit("select", item, cycle);
       this.close();
@@ -201,7 +182,6 @@ export default {
     isOpen(newVal) {
       setTimeout(() => {
         if (newVal) {
-          this.$refs.cycleOption.style.display = "block";
           this.$refs.cycleOption.classList.add("cycle-select__option--open");
           this.$el.style.minHeight = `${this.$refs.cycleOption.clientHeight +
             this.$el.clientHeight}px`;
@@ -281,15 +261,12 @@ export default {
     position: absolute;
     width: 100%;
     opacity: 0;
-    max-height: 0;
     visibility: hidden;
-    display: none;
     transition: visibility 0s $open-animation-duration,
       opacity $open-animation-duration;
     &--open {
       z-index: 2;
       opacity: 1;
-      max-height: 100vh;
       visibility: visible;
       transition: visibility 0s, opacity $open-animation-duration;
     }
